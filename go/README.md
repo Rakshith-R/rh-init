@@ -2,7 +2,7 @@
 
 ## Cheatsheet 
 
-### 1. Structure (Package, import, exports, variables, functions): 
+## 1. Structure (Package, import, exports, variables, functions): 
 >first line is name of the package
 ```go
 package go.com/cheatsheet
@@ -22,7 +22,7 @@ import (
 )
 ```
 
->Exported var or fucn needs to start with Capital name
+>Exported var or fucn needs to start with Capital Letter
 ```go 
 var A int =1 //is accessible
 
@@ -71,8 +71,14 @@ func function_name( [parameter list] ) [return_types]
 {
    body of the function
 }
+
+//naked fucntions : named return parameters with empty return statement, return named params
+func name(params) (a int){
+    return 
+}
+
 ```
-### 1. Flow Control (for, if, else, switch &defer): 
+## 2. Flow Control (for, if, else, switch &defer): 
 
 >For , the only looping construct
 ```go
@@ -103,6 +109,84 @@ if a:=i/10;a>100{    //shorthand a, the walrus operator  kinda stuff
     i-- //var a available in else too
 } 
 ```
+> Switch
+```go
+switch a:=i/10;a{
+    case 1:
+
+    case 2:
+    default:
+}
+
+```
+
+> defer : A defer statement defers the execution of a function until the surrounding function returns.
+> The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns(called at end of current block/ after the outer function returns and before poping it ). 
+```go
+defer fmt.Println("world")
+fmt.Println("hello")
+//output hello \n world \n
+//multi defered func called in stack kinda lifo order
+//Defer is commonly used to simplify functions that perform various clean-up actions.
+```
+## 3. More types : ptr, Structs, slices and maps
+> Pointers (ditto to C , * - dereference, & - returns pointer to the var, except no pointer arithmetic)
+```go
+	p := &i         // point to i
+	fmt.Println(*p) // read i through the pointer
+	*p = 21         // set i through the pointer
+	fmt.Println(i)  // see the new value of i
+```
+
+> Structs
+```go
+type Vertex struct{
+    X,Y int
+}
+
+var (
+    v1=Vertex{1,2}
+    v2=Vertex{X:1}
+    p=&Vertex{1,2}
+)
+```
+
+> Arrays
+```go
+var a [10]int
+var b [2]string
+```
 
 
-## Driver 
+>Slices : A slice does not store any data, are like references to arrays  ;append ;  len() cap()  , empty ->nil
+```go
+primes := [6]int{2, 3, 5, 7, 11, 13}
+var s []int = primes[1:4]             //slice a[low:high]  high not included
+fmt.Println(s)                        // [3 5 7]
+s=append(s,2) //func append(s []T, vs ...T) []T
+fmt.Println(s)                        // [3 5 7 2]
+
+b=[]bool{true, true, false}            // creates an array, then builds a slice that references it:
+
+fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s) 
+
+a := make([]int, 5)  // len(a)=5
+b := make([]int, 0, 5) // len(b)=0, cap(b)=5
+
+```
+
+> Range
+```go
+for index, value := range pow {
+	fmt.Printf("2**%d = %d\n", index, value)
+}
+for i := range pow {}  // only index
+
+```
+
+> Maps
+```go
+m = make(map[string]Vertex)
+
+```
+
