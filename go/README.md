@@ -241,5 +241,99 @@ You can only declare a method with a receiver whose type is defined in the same 
 
 >Interface :as a set of method signatures. 
 ```go
+type Vertex struct{var x,y float64}
+type myfloat float64
+func (v Vertex) abs() float64{
+    return math.Sqrt(v.x*v.x+v.y*v.y)
+}
 
+func (f myfloat) abs() float64{
+    if f<0{return -f}
+    return f
+}
+type Abser interface{
+    abs() float64 
+}
+var a Abser
+a=myfloat{6} 
+fmt.Println(a.abs())
+a=Vertex{2,3}
+fmt.Println(a.abs())
+/*
+#interface -> set of method signature matching args and return types, it is implicit(no implements required)
+#Can contain any type which implements all method signatures
+#Can only be used to call that method, nothing else can be accessed
+#holds (value,type)
+# calling with nil value calls function with nil value (but has concrete type :- ptr)
+#calling nil interface method is runtime error ! (
+    var a abser
+    a.abs() // error
+    )  
+# can have zero method empty interface
+*/
+//Type assertion : access underlying value 
+val:=i.(int) // if i doesnt have that concrete type, trigger a panic !
+t,ok:=i.(int) // ok=true if ctype found else false(with t= 0 value)
+
+//Type Switch : i.(type)can only be used in type switch,. v will have the value 
+switch v := i.(type) {
+    case T:
+        // here v has type T
+    case S:
+        // here v has type S
+    default:
+        // no match; here v has the same type as i
+}
+//Stringer interface
+func (ip IPAddr) String() string{
+	return fmt.Sprintf("%v.%v.%v.%v",ip[0],ip[1],ip[2],ip[3])
+}
+```
+
+
+
+## 5. Concurrency : Goroutines, Channels, Buffered Chn, Range&Close, Select, Def Select, Sync Mutex
+
+>Go routines :  lightweight thread managed by the Go runtime. evaluation in curr goroutine, exec in new
+```go
+go f(x,y,z)
+```
+
+>Channels : sends and receives block until the other side is ready. 
+```go
+ch := make(chan int)
+ch <- v    // Send v to channel ch.
+v := <-ch  // Receive from ch, and assign value to v.
+// Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty. 
+ch := make(chan int, 100)
+close(ch)
+//Note: Only the sender should close a channel, never the receiver. Sending on a closed channel will cause a panic.
+for i := range c {}
+v, ok := <-ch // ok indicates whether channel closed or open
+```
+>Select : The select statement lets a goroutine wait on multiple communication operations.
+A select blocks until one of its cases can run, then it executes that case. It chooses one at random if multiple are ready. 
+The default case in a select is run if no other case is ready.
+```go
+//channels -> c & quit
+select {
+    case c <- x:
+    	x, y = y, x+y
+	case <-quit:
+		fmt.Println("quit")
+        return
+    default:
+        //try a send or receive without blocking: 
+}
+```
+>sync.Mutex
+```go
+type SafeCounter struct {
+	mu sync.Mutex
+	v  map[string]int
+}
+c.mu.Lock()
+// Lock so only one goroutine at a time can access the map c.v.
+c.v[key]++
+c.mu.Unlock()
 ```
