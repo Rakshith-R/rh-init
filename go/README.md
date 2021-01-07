@@ -14,7 +14,6 @@ package go.com/cheatsheet
  ```
 
 >Factored import statement
-
 ```go 
 import ( 
     "fmt"
@@ -22,12 +21,22 @@ import (
 )
 ```
 
->Exported var or fucn needs to start with Capital Letter
+>Exported var or func needs to start with Capital Letter
 ```go 
 var A int =1 //is accessible
 
 var a int =1 // not accessible
 ```
+
+>single and multi line commments
+```go
+//single line comment
+/*
+multi line
+comment
+*/
+```
+
 
 >Variables deaclaration:  var < name > < type > = < value > or infer by < name > := < value >
 ```go 
@@ -40,7 +49,7 @@ var (
 )
 a := 1 //shorthand available only inside functions
 ```
->basic Types
+>basic Types + const + typedef ->type
 ```go
 bool
 string
@@ -52,6 +61,10 @@ float32 float64
 complex64 complex128
 
 const Pi=3.14  // Cannot be declared using :=
+type Myint int
+type Name struct{
+    first_name,last_name string
+}
 ```
 
 >Type casting, needs explicit casting ! / type inference
@@ -72,7 +85,7 @@ func function_name( [parameter list] ) [return_types]
    body of the function
 }
 
-//naked fucntions : named return parameters with empty return statement, return named params
+//naked fucntions : named return parameters with empty return(naked) statement, return named params
 func name(params) (a int){
     return 
 }
@@ -129,6 +142,7 @@ fmt.Println("hello")
 //multi defered func called in stack kinda lifo order
 //Defer is commonly used to simplify functions that perform various clean-up actions.
 ```
+
 ## 3. More types : ptr, Structs, slices and maps
 > Pointers (ditto to C , * - dereference, & - returns pointer to the var, except no pointer arithmetic)
 ```go
@@ -147,18 +161,20 @@ type Vertex struct{
 var (
     v1=Vertex{1,2}
     v2=Vertex{X:1}
-    p=&Vertex{1,2}
+    p=&Vertex{1,2} //gets a *Vertex
 )
+(*p).X=2
+p.X=2  // or directly permitted
 ```
 
-> Arrays
+> Arrays - Fixed length 
 ```go
 var a [10]int
 var b [2]string
 ```
 
 
->Slices : A slice does not store any data, are like references to arrays  ;append ;  len() cap()  , empty ->nil
+>Slices : A slice does not store any data, are like references to arrays  ;append() ;  len() cap()  , empty ->nil , make
 ```go
 primes := [6]int{2, 3, 5, 7, 11, 13}
 var s []int = primes[1:4]             //slice a[low:high]  high not included
@@ -186,7 +202,44 @@ for i := range pow {}  // only index
 
 > Maps
 ```go
-m = make(map[string]Vertex)
+var m = make(map[string]Vertex)
+var n= map[string]int{}
+var n map[string]int          //needs to be initialized
+k:=map[int]int{ 1:2,3:3}      //only inside func
+k[4]=4                        // add key-value 
+delete(k,4)                   //delete key-value
+k=k[4]                        // returns default type value, no error thrown
+val,ok :=k[4]                 // ok true if present else false(val=0/""/false)
 
 ```
 
+
+## 4. Methods and interfaces : 
+
+> Methods - kinda like operator overloading on types
+```go
+type Vertex struct {
+	X, Y float64
+}
+//func (special rec arg) name([args list]) [return type]{}
+func (v Vertex) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+//declare with ptr to be able to modify value, convenience, Go interprets the statement v.Scale(5) as (&v).Scale(5) since the Scale method has a pointer receiver. 
+func (v *Vertex) Scale(f float64) {	
+    v.X = v.X * f
+	v.Y = v.Y * f
+}
+v := Vertex{3, 4}
+fmt.Println(v.Abs())        //variable.method_name()
+
+
+/*
+You can only declare a method with a receiver whose type is defined in the same package as the method. You cannot declare a method with a receiver whose type is defined in another package (which includes the built-in types such as int). 
+*/
+```
+
+>Interface :as a set of method signatures. 
+```go
+
+```
