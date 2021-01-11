@@ -1,6 +1,17 @@
 # Golang
 
 ## Cheatsheet 
+### Resources :
+- <a href="https://www.youtube.com/watch?v=sX8r6zATHGU">Philosophy of go(Yt)</a> 
+- <a href="https://tour.golang.org/welcome/1">A tour of go</a>
+- <a href="https://blog.golang.org/slices-intro">Slices</a>
+- <a href="https://golang.org/doc/effective_go.html#introduction">Effective go code</a>
+- <a href="https://golang.org/pkg/">Packages</a>
+
+- <a href="https://blog.alexellis.io/golang-writing-unit-tests/">Unit Tests</a>
+
+- <a href="https://blog.golang.org/using-go-modules">Dependency Management : Modules</a>
+
 
 ## 1. Structure (Package, import, exports, variables, functions): 
 >first line is name of the package
@@ -126,15 +137,23 @@ if a:=i/10;a>100{    //shorthand a, the walrus operator  kinda stuff
 ```go
 switch a:=i/10;a{
     case 1:
-
-    case 2:
+        break
+    case 2,3,4:
+    break         //multiple cases sep by comma
     default:
 }
-
+switch {            // if left empty, chooses true case top to bottom
+    case '0' <= c && c <= '9':
+        return c - '0'
+    case 'a' <= c && c <= 'f':
+        return c - 'a' + 10
+    case 'A' <= c && c <= 'F':
+        return c - 'A' + 10
+}
+//type switch refer interfaces
 ```
 
-> defer : A defer statement defers the execution of a function until the surrounding function returns.
-> The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns(called at end of current block/ after the outer function returns and before poping it ). 
+> defer : the deferred function is scheduled to be run immediately before the function executing the defer returns. The deferred call's arguments are evaluated immediately.
 ```go
 defer fmt.Println("world")
 fmt.Println("hello")
@@ -318,10 +337,11 @@ The default case in a select is run if no other case is ready.
 //channels -> c & quit
 select {
     case c <- x:
-    	x, y = y, x+y
-	case <-quit:
-		fmt.Println("quit")
+        x, y = y, x+y
+    case <-quit:{
+        fmt.Println("quit")
         return
+    }
     default:
         //try a send or receive without blocking: 
 }
@@ -336,4 +356,25 @@ c.mu.Lock()
 // Lock so only one goroutine at a time can access the map c.v.
 c.v[key]++
 c.mu.Unlock()
+func(){
+	c.mu.Lock()
+	defer c.mu.Unlock() //clean in case u need to return value
+    return c.v[key]
+}
 ```
+
+## 6. Standard Packages : Go 
+<a href="https://golang.org/pkg/fmt/">"fmt"</a></br>
+<a href="https://golang.org/pkg/sync/">"sync"</a></br>
+<a href="https://golang.org/pkg/fmt/">"fmt"</a></br>
+<a href="https://golang.org/pkg/strings/">"strings"</a></br>
+<a href="https://golang.org/pkg/strconv/">"strconv"</a></br>
+<a href="https://golang.org/pkg/os/">"os"</a></br>
+<a href="https://golang.org/pkg/http/">"http"</a>
+
+## 7. Unit Tests : has testing package
+
+
+## 8. Dependency Management : Modules 
+
+## 9. HTTP & gPRC server/client 

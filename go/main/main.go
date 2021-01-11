@@ -1,9 +1,11 @@
 package main
 
 import (
-	"go.com/cheatsheet"
+	"fmt"
+
+	"github.com/rakshith-r/rh-init/go/main/submodule"
 )
 
 func main() {
-	cheatsheet.HelloWorld()
+	fmt.Println(submodule.Reverse("Hello world!"))
 }
