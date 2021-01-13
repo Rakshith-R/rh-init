@@ -52,6 +52,7 @@ comment
 >Variables deaclaration:  var < name > < type > = < value > or infer by < name > := < value >
 ```go 
 var a int = 1
+var a=1 //auto inference 
 var a,b int =1,2
 var (
     a int =1
@@ -91,8 +92,7 @@ g := 0.867 + 0.5i // complex128
 
 > Functions
 ```go 
-func function_name( [parameter list] ) [return_types]
-{
+func function_name( [parameter list] ) [return_types]{
    body of the function
 }
 
@@ -327,7 +327,7 @@ v := <-ch  // Receive from ch, and assign value to v.
 ch := make(chan int, 100)
 close(ch)
 //Note: Only the sender should close a channel, never the receiver. Sending on a closed channel will cause a panic.
-for i := range c {}
+for i := range ch {}
 v, ok := <-ch // ok indicates whether channel closed or open
 ```
 >Select : The select statement lets a goroutine wait on multiple communication operations.
@@ -373,8 +373,39 @@ func(){
 <a href="https://golang.org/pkg/http/">"http"</a>
 
 ## 7. Unit Tests : has testing package
+```go
+import testing //built in
+// name the file name_test.go
+func Test<name>(t * testing.T){
+    var tests = []struct { //tabular tests
+        a, b,want int
+    }{
+        {0, 1, 0},
+        {1, 0, 0},
+    }
+//t.Run enables running “subtests”, one for each table entry. These are shown separately when executing go test -v.
+    for _, tt := range tests {
+        testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
+        t.Run(testname, func(t *testing.T) {  //naming tests 
+            ans := IntMin(tt.a, tt.b)
+            if ans != tt.want {
+                t.Errorf("got %d, want %d", ans, tt.want)
+            }
+        })
+    }
+}
 
+/*
+go test -v
+//to check coverage
+go test -cover
+go test -coverprofile=coverage.out
+go tool cover -html=coverage.out //gives html file to visualize
+*/
+```
 
 ## 8. Dependency Management : Modules 
+```go
 
+```
 ## 9. HTTP & gPRC server/client 

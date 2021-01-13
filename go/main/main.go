@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/rakshith-r/rh-init/go/main/submodule"
+	"./submodule"
 )
 
 func main() {
+	arr := [5]int{1, 2, 3, 4, 5}
+	ptr := &arr
+	fmt.Println(ptr[0])
 	fmt.Println(submodule.Reverse("Hello world!"))
 }
