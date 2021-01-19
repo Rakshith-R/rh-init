@@ -28,8 +28,13 @@ package go.com/cheatsheet
 ```go 
 import ( 
     "fmt"
-    "math/rand"
+    "math"
 )
+//Import declaration          Local name of Sin
+import   "lib/math"         //math.Sin
+import m "lib/math"         //m.Sin
+import . "lib/math"         //Sin
+
 ```
 
 >Exported var or func needs to start with Capital Letter
