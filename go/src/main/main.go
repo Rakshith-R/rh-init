@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"submodule"
+	"github.com/rakshith-r/rh-init/go/src/main/submodule"
 )
 
 func main() {
@@ -12,4 +12,9 @@ func main() {
 	fmt.Scanln(&arr[0])
 	fmt.Println(ptr[0])
 	fmt.Println(submodule.Reverse("Hello world!"))
+}
+
+//Main ..
+func Main() {
+	main()
 }

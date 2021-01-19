@@ -409,7 +409,7 @@ go tool cover -html=coverage.out //gives html file to visualize
 */
 ```
 
-## 8. Dependency Management : Modules 
+## 8. Dependency Management : Modules https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/ 
 ```go
 
 ```

@@ -1,10 +1,30 @@
 # YAML : YAML Ain't Markup Language
-https://rollout.io/blog/yaml-tutorial-everything-you-need-get-started/ 
+Popularly used for writing configs.!
+
+https://rollout.io/blog/yaml-tutorial-everything-you-need-get-started/
+
+https://codebeautify.org/yaml-to-json-xml-csv
 ```yaml
-#comment
+---
+#begins with --- , space used for scoping
 key : value
-list : [1,4,3]
- - a
- - b
- - c
+text1 : hello
+text2 : "hello"
+text3 : >
+ hello how are you
+ hello
+text4 : |  #add '+' to preserve last characters, '-' to strip ws or nlines
+ hello how are you
+ hello
+list1 : 
+ - 123
+ - 0123  #oct
+ - 0xA  #hex
+ - null
+ - ~
+list2 : [1,"1",4]
+
+nested_object :
+ inside : {embedded_json:TRUE}
+ inside2 : "tEST"
 ```
