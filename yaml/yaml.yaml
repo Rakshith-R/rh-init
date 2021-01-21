@@ -1,9 +1,9 @@
 ---
-#begins with --- , space used for scoping
+#begins with --- , end with ... , space used for scoping
 key : value
 text1 : hello
 text2 : "hello"
-text3 : >
+text3 : > #folds back replaces newline with space
  hello how are you
  hello
 text4 : |  #add '+' to preserve last characters, '-' to strip ws or nlines
@@ -15,8 +15,9 @@ list1 :
  - 0xA  #hex
  - null
  - ~
-list2 : [1,"1",4]
-
+list2 : &Anchor [1,"1",4]   #Node
+list3 : *Anchor #unpacks here
 nested_object :
  inside : {embedded_json:TRUE}
  inside2 : "tEST"
+...

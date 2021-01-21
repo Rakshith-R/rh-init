@@ -12,8 +12,12 @@
 
 - <a href="https://blog.golang.org/using-go-modules">Dependency Management : Modules</a>
 
+<details>
+<summary>
 
 ## 1. Structure (Package, import, exports, variables, functions): 
+</summary>
+
 >first line is name of the package
 ```go
 package go.com/cheatsheet
@@ -107,7 +111,14 @@ func name(params) (a int){
 }
 
 ```
+
+</details><br>
+
+<details>
+<summary>
+
 ## 2. Flow Control (for, if, else, switch &defer): 
+</summary>
 
 >For , the only looping construct
 ```go
@@ -167,7 +178,14 @@ fmt.Println("hello")
 //Defer is commonly used to simplify functions that perform various clean-up actions.
 ```
 
+</details><br>
+
+<details>
+<summary>
+
 ## 3. More types : ptr, Structs, slices and maps
+</summary>
+
 > Pointers (ditto to C , * - dereference, & - returns pointer to the var, except no pointer arithmetic)
 ```go
 	p := &i         // point to i
@@ -237,8 +255,12 @@ val,ok :=k[4]                 // ok true if present else false(val=0/""/false)
 
 ```
 
+</details><br>
+<details>
+<summary>
 
 ## 4. Methods and interfaces : 
+</summary> 
 
 > Methods - kinda like operator overloading on types
 ```go
@@ -264,6 +286,7 @@ You can only declare a method with a receiver whose type is defined in the same 
 ```
 
 >Interface :as a set of method signatures. 
+
 ```go
 type Vertex struct{var x,y float64}
 type myfloat float64
@@ -314,9 +337,13 @@ func (ip IPAddr) String() string{
 }
 ```
 
+</details><br>
 
+<details>
+<summary>
 
 ## 5. Concurrency : Goroutines, Channels, Buffered Chn, Range&Close, Select, Def Select, Sync Mutex
+</summary>
 
 >Go routines :  lightweight thread managed by the Go runtime. evaluation in curr goroutine, exec in new
 ```go
@@ -368,7 +395,12 @@ func(){
 }
 ```
 
+</details><br>
+<details>
+<summary>
+
 ## 6. Standard Packages : Go 
+</summary>
 <a href="https://golang.org/pkg/fmt/">"fmt"</a></br>
 <a href="https://golang.org/pkg/sync/">"sync"</a></br>
 <a href="https://golang.org/pkg/fmt/">"fmt"</a></br>
@@ -376,8 +408,16 @@ func(){
 <a href="https://golang.org/pkg/strconv/">"strconv"</a></br>
 <a href="https://golang.org/pkg/os/">"os"</a></br>
 <a href="https://golang.org/pkg/http/">"http"</a>
+</details>
+<br>
+
+<details>
+<summary>
 
 ## 7. Unit Tests : has testing package
+</summary>
+ 
+https://blog.alexellis.io/golang-writing-unit-tests/
 ```go
 import testing //built in
 // name the file name_test.go
@@ -408,9 +448,135 @@ go test -coverprofile=coverage.out
 go tool cover -html=coverage.out //gives html file to visualize
 */
 ```
+</pre>
+</details>
 
-## 8. Dependency Management : Modules https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/ 
+<br>
+
+
+<details>
+<summary>
+
+## 8. Dependency Management : Modules 
+</summary>
+
+Modules : https://blog.golang.org/using-go-modules , 
+
+project structure https://eli.thegreenplace.net/2019/simple-go-project-layout-with-modules/ 
+ 
 ```go
 
 ```
+</details><br>
+
+<details >
+<summary>
+
 ## 9. HTTP & gPRC server/client 
+</summary>
+
+Reason : https://www.youtube.com/watch?v=u4LWEXDP7_M  
+
+protoc buff :https://tutorialedge.net/golang/go-protocol-buffer-tutorial/ , 
+
+grpc : https://tutorialedge.net/golang/go-grpc-beginners-tutorial/#video-tutorial 
+
+>.proto file  : $protoc --go_out=. --go-grpc_out=. filename.proto
+```go
+syntax="proto3";
+package main;
+
+message HelloRequest{
+    string name=1; //type name= size or ex from which it is inferred 
+}
+message HelloReply {
+    string message = 1; //message can be nested
+}
+  
+service Greeter{
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+```
+>Server: define typer server, implement function(rpc) ; create, register new server, listen on tcp port. 
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
+)
+
+const (
+	port = ":50051"
+)
+
+// server is used to implement GreeterServer.
+type server struct {
+	UnimplementedGreeterServer
+}
+
+// SayHello implements GreeterServer
+func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &HelloReply{Message: "Hello " + in.GetName()}, nil
+}
+
+func main() {
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	RegisterGreeterServer(s, &server{})
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+```
+>client : dial the address, create hrpc connection, create context, call rpc
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"google.golang.org/grpc"
+)
+
+const (
+	address     = "localhost:50051"
+	defaultName = "Rakshith"
+)
+
+func main() {
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := NewGreeterClient(conn)
+	name := defaultName
+	if len(os.Args) > 1 {
+		name = os.Args[1]
+	}
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.SayHello(ctx, &HelloRequest{Name: name})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("Greeting: %s", r.GetMessage())
+}
+
+```
+</details><br>
