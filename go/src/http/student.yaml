@@ -1,0 +1,22 @@
+Name: Naren N
+Class: 'VII '
+Age: 21
+html: |+
+  <body>
+  <h2>Name : %s</h2>
+  <h2>Class : %s</h2>
+  <h2>Age : %d</h2>
+  <br/>
+  <form method="post" action ="/">
+  <label for="Name">Name:</label><br>
+  <input type="text" id="Name" name="Name" value="%s"><br>
+  <label for="Class">Class:</label><br>
+  <input type="text" id="Class" name="Class" value="%s" ><br>
+  <label for="Age">Age:</label><br>
+  <input type="number" id="Age" name="Age" value=%d><br>
+  <input type="submit" value="Submit">
+  </form>
+  </body>
+
+
+
