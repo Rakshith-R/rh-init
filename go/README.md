@@ -469,7 +469,7 @@ project structure https://eli.thegreenplace.net/2019/simple-go-project-layout-wi
 ```
 </details><br>
 
-<details >
+<details open>
 <summary>
 
 ## 9. HTTP & gPRC server/client 
@@ -481,7 +481,9 @@ protoc buff :https://tutorialedge.net/golang/go-protocol-buffer-tutorial/ ,
 
 grpc : https://tutorialedge.net/golang/go-grpc-beginners-tutorial/#video-tutorial 
 
->.proto file  : $protoc --go_out=. --go-grpc_out=. filename.proto
+>.proto file  : cmd to generate .pb.go files
+
+>$protoc --go_out=. --go-grpc_out=. filename.proto
 ```go
 syntax="proto3";
 package main;
@@ -497,7 +499,7 @@ service Greeter{
     rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 ```
->Server: define typer server, implement function(rpc) ; create, register new server, listen on tcp port. 
+>Server: define type server, implement function(rpc) ; create, register new server, listen on tcp port. 
 ```go
 package main
 

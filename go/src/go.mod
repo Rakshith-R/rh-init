@@ -8,4 +8,5 @@ require (
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/grpc/examples v0.0.0-20210121012422-7f2581f910fc
 	google.golang.org/protobuf v1.25.0
+	gopkg.in/yaml.v2 v2.4.0
 )
