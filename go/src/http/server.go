@@ -14,6 +14,7 @@ var stud student.Student = student.Student{}
 func main() {
 	stud.Init()
 	http.HandleFunc("/", handler)
+	log.Println("Listening on port 3000")
 	http.ListenAndServe(":3000", nil)
 }
 
@@ -30,7 +31,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
 		stud.Age = i
 		stud.Write()
 	}
-	resp := fmt.Sprintf(stud.HTML, stud.Name, stud.Class, stud.Age, stud.Name, stud.Class, stud.Age)
+	resp := stud.GetHTML()
 	log.Println(resp)
 	fmt.Fprint(w, resp)
 }

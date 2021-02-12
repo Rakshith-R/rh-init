@@ -1,6 +1,7 @@
 package student
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -12,20 +13,11 @@ type Student struct {
 	Name  string `yaml:"Name"`
 	Class string `yaml:"Class"`
 	Age   int    `yaml:"Age"`
-	HTML  string `yaml:"html"`
 }
 
 // Init initializes student
 func (student *Student) Init() {
-	file, err := os.Open("student.yaml")
-	if err != nil {
-		log.Fatalf("Error in Init opening file : %v", err)
-	}
-	defer file.Close()
-	d := yaml.NewDecoder(file)
-	if err := d.Decode(student); err != nil {
-		log.Fatalf("Error in Init decoding : %v", err)
-	}
+	student.Write()
 }
 func (student *Student) Write() {
 	err := os.Remove("student.yaml")
@@ -38,4 +30,24 @@ func (student *Student) Write() {
 	if err := d.Encode(student); err != nil {
 		log.Fatalf("Error in Init decoding : %v", err)
 	}
+}
+
+//GetHTML returns html
+func (student *Student) GetHTML() string {
+	HTML := `<body>
+	<h2>Name : %s</h2>
+	<h2>Class : %s</h2>
+	<h2>Age : %d</h2>
+	<br/>
+	<form method="post" action ="/">
+	<label for="Name">Name:</label><br>
+	<input type="text" id="Name" name="Name" value="%s"><br>
+	<label for="Class">Class:</label><br>
+	<input type="text" id="Class" name="Class" value="%s" ><br>
+	<label for="Age">Age:</label><br>
+	<input type="number" id="Age" name="Age" value=%d><br>
+	<input type="submit" value="Submit">
+	</form>
+	</body>`
+	return fmt.Sprintf(HTML, student.Name, student.Class, student.Age, student.Name, student.Class, student.Age)
 }
