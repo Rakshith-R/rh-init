@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
   - name: http
-    image: ghcr.io/rakshith-r/http_server:latest
+    image: ghcr.io/rakshith-r/http_server:1.0
     ports:
     - containerPort: 3000

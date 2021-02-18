@@ -18,7 +18,8 @@ func main() {
 	go func() {
 		http.ListenAndServe(":3001", nil)
 	}()
-	http.ListenAndServe(":3000", nil)
+	err := http.ListenAndServe(":3000", nil)
+	fmt.Printf("%v", err)
 }
 
 func handler(w http.ResponseWriter, req *http.Request) {
