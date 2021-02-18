@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http
+spec:
+  containers:
+  - name: http
+    image: ghcr.io/rakshith-r/http_server:latest
+    ports:
+    - containerPort: 3000
