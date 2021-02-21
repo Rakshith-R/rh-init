@@ -8,3 +8,29 @@ spec:
     image: ghcr.io/rakshith-r/http_server:1.0
     ports:
     - containerPort: 3000
+  tolerations: 
+  - key: "key2"
+    operator: "Equal" #or "Exists"
+    effect: "NoSchedule" #or PreferNoSchedule or NoExecute
+    value : "value1" #not needed if opeartor is Exists
+    # tolerationSeconds: 6000 #for NoExecute
+
+  nodeSelector:
+    disktype: ssd  #kubectl label nodes <node-name> <label-key>=<label-value>
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/e2e-az-name
+          operator: In  #In, NotIn, Exists, DoesNotExist, Gt, Lt
+          values:
+          - e2e-az1
+          - e2e-az2
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: another-node-label-key
+          operator: In
+          values:
+          - another-node-label-value

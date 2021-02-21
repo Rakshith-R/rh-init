@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username1: YWRtaW4=   #echo -n 'admin' | base64 -> YWRtaW4
+  password1: dDBwLVNlY3JldA==
+stringData:
+  username: admin
+  password: t0p-Secret
+...
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: ghcr.io/rakshith-r/http_server:1.0
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/foo"
+      readOnly: true
+  volumes:
+  - name: foo
+    secret:
+      secretName: mysecret
+...

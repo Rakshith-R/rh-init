@@ -18,17 +18,17 @@
 
 - [API Convention](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)
 
-<details>
+<details><summary>
 
-<summary><h2>Pods</h2></summary>
+### Pods 
+[Concept](https://kubernetes.io/docs/concepts/workloads/pods/) : | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/pod-v1/ )
+
+</summary>
 
 <img src="https://3p8owy1gdkoh452nrc36wbnp-wpengine.netdna-ssl.com/wp-content/uploads/2018/02/Pod-Diagram-1-700x360.png">
 </img>
 
 
-### [Concept](https://kubernetes.io/docs/concepts/workloads/pods/) 
-
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/pod-v1/ )
 
 ### Ex
 ```yaml
@@ -45,18 +45,42 @@ spec:
 ```
 </details>
 
+<details><summary>
 
-<details>
-<summary><h2>Replication Controller </h2></summary>
+### Jobs
+[Concept](https://kubernetes.io/docs/concepts/workloads/job/) : | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/job-v1/)
 
+</summary>
+A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate. As pods successfully complete, the Job tracks the successful completions. When a specified number of successful completions is reached, the task (ie, Job) is complete. Deleting a Job will clean up the Pods it created.
 
-### [Concept]("https://kubernetes.io/docs/concepts/workloads/controllers/replicacontroller/") 
-
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/replica-controller-v1/)
 
 
 ### Ex
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4
+```
+</details>
 
+
+<details><summary>
+
+### Replication Controller 
+[Concept](https://kubernetes.io/docs/concepts/workloads/controllers/replicacontroller/) :  | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/replica-controller-v1/)
+</summary>
+
+### Ex
 ```yaml
 apiVersion: apps/v1
 kind: ReplicationController
@@ -81,16 +105,14 @@ spec:
 </details>
 
 
-<details>
-<summary><h2>ReplicaSets </h2></summary>
+<details><summary>
+
+### ReplicaSets 
+
+[Concept](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) : | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/replica-set-v1/)
+</summary>
 
 ReplicaSet is the next-generation ReplicationController that supports the new set-based label selector. It's mainly used by Deployment as a mechanism to orchestrate pod creation, deletion and updates. Note that we recommend using Deployments instead of directly using Replica Sets, unless you require custom update orchestration or don't require updates at all.
-
-
-### [Concept]("https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/") 
-
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/replica-set-v1/)
-
 
 ### Ex
 
@@ -118,17 +140,16 @@ spec:
 </details>
 
 
-<details>
-<summary><h2>Deployments </h2></summary>
+<details><summary>
+
+### Deployments 
+[Concept](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) : | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/deployment-v1/)
+</summary>
 (Recommended) 
 Deployment is a higher-level API object that updates its underlying Replica Sets and their Pods. Deployments are recommended if you want this rolling update functionality because, they are declarative, server-side, and have additional features.
 
 
 <img src="https://3p8owy1gdkoh452nrc36wbnp-wpengine.netdna-ssl.com/wp-content/uploads/2018/03/Deployment.png" style='background-color:white'></img>
-
-### [Concept]("https://kubernetes.io/docs/concepts/workloads/controllers/deployment/") 
-
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/deployment-v1/)
 
 ### Ex
 
@@ -160,12 +181,12 @@ spec:
 </details>
 
 
-<details>
-<summary><h2>DaemonSet </h2></summary>
+<details><summary>
 
-### [Concept](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) 
+### DaemonSet 
+[Concept](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) : | : [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/daemon-set-v1/)
 
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/daemon-set-v1/)
+</summary>
 
 ### Ex
 
@@ -214,15 +235,271 @@ spec:
 
 
 
-<details>
-<summary><h2>Stateful Set </h2></summary>
+<details><summary>
 
-### [Concept](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) 
+### ConfigMaps
 
-### [API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/stateful-set-v1/)
+[Concept](https://kubernetes.io/docs/concepts/configuration/configmap/) : - : 
+[API](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/config-map-v1/)
+
+</summary>
+A ConfigMap is an API object used to store non-confidential data in key-value pairs. Pods can consume ConfigMaps as environment variables, command-line arguments, or as configuration files in a volume.
+
+A ConfigMap allows you to decouple environment-specific configuration from your container images, so that your applications are easily portable.
 
 ### Ex
 
 ```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-demo
+data:
+  # property-like keys; each key maps to a simple value
+  player_initial_lives: "3"
+  ui_properties_file_name: "user-interface.properties"
+
+  # file-like keys
+  game.properties: |
+    enemy.types=aliens,monsters
+    player.maximum-lives=5    
+  user-interface.properties: |
+    color.good=purple
+    color.bad=yellow
+    allow.textmode=true    
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo-pod
+spec:
+  containers:
+    - name: demo
+      image: alpine
+      command: ["sleep", "3600"]
+      env:
+        # Define the environment variable
+        - name: PLAYER_INITIAL_LIVES # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo           # The ConfigMap this value comes from.
+              key: player_initial_lives # The key to fetch.
+        - name: UI_PROPERTIES_FILE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo
+              key: ui_properties_file_name
+      volumeMounts:
+      - name: config
+        mountPath: "/config"
+        readOnly: true
+  volumes:
+    # You set volumes at the Pod level, then mount them into containers inside that Pod
+    - name: config
+      configMap:
+        # Provide the name of the ConfigMap you want to mount.
+        name: game-demo
+        # An array of keys from the ConfigMap to create as files
+        items:
+        - key: "game.properties"
+          path: "game.properties"
+        - key: "user-interface.properties"
+          path: "user-interface.properties"
 ```
+</details>
+
+
+
+<details>
+<summary>
+
+### Secrets
+
+[Concept](https://kubernetes.io/docs/concepts/configuration/secret/) : - : 
+[API](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/)
+
+</summary>
+A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key. 
+The Secret resource contains two maps: data and stringData. The data field is used to store arbitrary data, encoded using base64. The stringData field is provided for convenience, and it allows you to provide Secret data as unencoded strings. The keys of data and stringData must consist of alphanumeric characters, -, _ or ..
+
+### Ex
+
+```yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username1: YWRtaW4=   #echo -n 'admin' | base64 -> YWRtaW4
+  password1: dDBwLVNlY3JldA==
+stringData:
+  username: admin
+  password: t0p-Secret
+...
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: ghcr.io/rakshith-r/http_server:1.0
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/foo"
+      readOnly: true
+  volumes:
+  - name: foo
+    secret:
+      secretName: mysecret
+...
+```
+</details>
+
+
+<details>
+<summary>
+
+### Volumes 
+
+[Concept](https://kubernetes.io/docs/concepts/storage/volumes/) : - : 
+[API](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/volume/)
+
+</summary>
+Volume represents a named volume in a pod that may be accessed by any container in the pod.
+
+### Ex
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pd
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  volumes:
+  - name: cache-volume
+    emptyDir: {}
+```
+</details>
+
+<details>
+<summary>
+
+### Stateful Set 
+
+[Concept](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) : - : 
+[API](https://kubernetes.io/docs/reference/kubernetes-api/workloads-resources/stateful-set-v1/)
+
+</summary>
+Manages the deployment and scaling of a set of Pods, and provides guarantees about the ordering and uniqueness of these Pods and sticky identity.
+
+### Ex
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  serviceName: "nginx"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+```
+</details>
+
+
+
+
+<details>
+<summary>
+
+### Pod assignments 
+
+[Taints & Toleration](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) : - : 
+[Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+
+</summary>
+Node affinity, is a property of Pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite -- they allow a node to repel a set of pods.
+
+Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.
+
+Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints.
+
+
+### Ex
+taint a node
+
+`kubectl taint nodes node1 key1=value1:NoSchedule `
+
+to remove Taint
+
+`kubectl taint nodes node1 key1=value1:NoSchedule- `
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http
+spec:
+  containers:
+  - name: http
+    image: ghcr.io/rakshith-r/http_server:1.0
+    ports:
+    - containerPort: 3000
+  tolerations: 
+  - key: "key2"
+    operator: "Equal" #or "Exists"
+    effect: "NoSchedule" #or PreferNoSchedule or NoExecute
+    value : "value1" #not needed if opeartor is Exists
+    tolerationSeconds: 6000 #for NoExecute
+```
+
 </details>
