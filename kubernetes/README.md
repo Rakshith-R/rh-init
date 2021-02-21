@@ -499,7 +499,50 @@ spec:
     operator: "Equal" #or "Exists"
     effect: "NoSchedule" #or PreferNoSchedule or NoExecute
     value : "value1" #not needed if opeartor is Exists
-    tolerationSeconds: 6000 #for NoExecute
+    # tolerationSeconds: 6000 #for NoExecute
+
+  nodeSelector:
+    disktype: ssd  #kubectl label nodes <node-name> <label-key>=<label-value>
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/e2e-az-name
+          operator: In  #In, NotIn, Exists, DoesNotExist, Gt, Lt
+          values:
+          - e2e-az1
+          - e2e-az2
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: another-node-label-key
+          operator: In
+          values:
+          - another-node-label-value
+  nodeName: kube-01
+```
+
+</details>
+
+
+<details>
+<summary>
+
+### PV &PVSC 
+
+[PV](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) : - : 
+[Storage Class](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinithttps://kubernetes.io/docs/concepts/storage/storage-classes/)
+
+</summary>
+A PersistentVolume (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes.
+
+A PersistentVolumeClaim (PVC) is a request for storage by a user. It is similar to a Pod. Pods consume node resources and PVCs consume PV resources. 
+
+PVs are resources in the cluster. PVCs are requests for those resources and also act as claim checks to the resource. 
+
+### Ex
+```yaml
 ```
 
 </details>
